@@ -4,6 +4,7 @@ const fetch = require('./loadContent');
 const server = http.createServer((req,res)=>{
     
     if(req.url == "/"){
+        res.writeHead(200,{"Content-type":"text/plain"});
         res.write(fetch.blades.index);
         res.end();
     }
