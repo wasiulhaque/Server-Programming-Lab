@@ -5,7 +5,7 @@ const sessionStorage = require('sessionstorage');
 
 
 const getRegister = (req,res) => {
-    res.sendFile("register.html",{root:"./views/users"});
+    res.sendFile("register.html",{root:"./views/templates/AdminLTE-master/pages/examples"});
 }
 
 const postRegister = async (req,res) => {
@@ -38,7 +38,7 @@ const postRegister = async (req,res) => {
 
 const getLogin = (req,res) => {
     sessionStorage.clear();
-    res.sendFile("login.html",{root:"./views/users"});
+    res.sendFile("login.html",{root:"./views/templates/AdminLTE-master/pages/examples"});
 }
 
 const postLogin = async (req,res) => {
@@ -69,8 +69,9 @@ const postLogin = async (req,res) => {
 }
 
 const getDashboard = (req,res) => {
-    const username = sessionStorage.getItem("username")
-    res.send(`<h1>Welcome, ${username}. <br> Have a good day. </h1>`);
+    const username = sessionStorage.getItem("username");
+    alert("Welcome, " + username);
+    res.sendFile("index.html",{root:"./views/templates/AdminLTE-master"});
 }
 
 module.exports = {getRegister,postRegister,getLogin,getDashboard,postLogin};

@@ -4,7 +4,7 @@ const userRoutes = require("./routes/userRoutes.routes");
 
 
 
-
+app.use(express.static("public"));
 app.use(userRoutes);
 app.get("/",(req,res)=>{
     //res.send("<h1>Home Page</h1>")
