@@ -56,6 +56,7 @@ const postLogin = async (req,res) => {
             }
             else if(!result || !(await bcrypt.compare(password,result[0].password))){
                 console.log("Invalid Credentials.");
+                alert("Invalid Credentials.");
                 res.redirect("/login");
             }
             else{
