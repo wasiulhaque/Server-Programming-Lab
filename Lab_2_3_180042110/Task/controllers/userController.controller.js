@@ -13,17 +13,13 @@ const postRegister = async (req,res) => {
     const password = req.body.password;
     const email = req.body.email;
 
-    db.query('SELECT email FROM users WHERE email = ?',[email], async (err, result) => {
+    db.query(`SELECT email FROM users WHERE username = '${username}' or email = '${email}'`, async (err, result) => {
         if (err){
             console.log(error);
         }
 
         if (result.length > 0){
-            alert("This Email is already in use");
-        }
-
-        else if(password.length < 6){
-            alert("Password must consist at least 6 characters");
+            alert("This Email/Username is already in use");
         }
 
         else{
@@ -32,6 +28,7 @@ const postRegister = async (req,res) => {
                 if(err) console.log(err);
                 else{
                     console.log("User Registration Successful.");
+                    alert("User Registration Successful.");
                     res.redirect("/login");
                 }
             })
@@ -52,7 +49,12 @@ const postLogin = async (req,res) => {
     else if(!password) alert("Please enter your Password");
     else{
         db.query(`SELECT * FROM users WHERE username = ?`,[username],async(err,result) => {
-            if(!result || !(await bcrypt.compare(password,result[0].password))){
+            if(result[0] == undefined){
+                console.log("No Username Found");
+                alert("Invalid Credentials.");
+                res.redirect("/login");
+            }
+            else if(!result || !(await bcrypt.compare(password,result[0].password))){
                 console.log("Invalid Credentials.");
                 res.redirect("/login");
             }
