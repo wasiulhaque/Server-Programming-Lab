@@ -12,7 +12,6 @@ const postRegister = async (req,res) => {
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
-    const saltRounds = 8;
 
     db.query('SELECT email FROM users WHERE email = ?',[email], async (err, result) => {
         if (err){
@@ -41,13 +40,13 @@ const postRegister = async (req,res) => {
 }
 
 const getLogin = (req,res) => {
+    sessionStorage.clear();
     res.sendFile("login.html",{root:"./views/users"});
 }
 
 const postLogin = async (req,res) => {
     const username = req.body.username;
     const password = req.body.password;
-    const saltRounds = 8;
     
     if(!username) alert("Please enter your Username");
     else if(!password) alert("Please enter your Password");
@@ -58,7 +57,7 @@ const postLogin = async (req,res) => {
                 res.redirect("/login");
             }
             else{
-                res.cookie('username',result[0].username);
+                res.cookie("isLoggedIn","Yes");
                 sessionStorage.setItem("username", username);
                 res.redirect(`/dashboard`);
             }
@@ -67,9 +66,8 @@ const postLogin = async (req,res) => {
 }
 
 const getDashboard = (req,res) => {
-    const id = req.params.id;
     const username = sessionStorage.getItem("username")
-    res.send(`<h1>User with Username - ${username} is requesting to access dashboard.</h1>`);
+    res.send(`<h1>Welcome, ${username}. <br> Have a good day. </h1>`);
 }
 
 module.exports = {getRegister,postRegister,getLogin,getDashboard,postLogin};
