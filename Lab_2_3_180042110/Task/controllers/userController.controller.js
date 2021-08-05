@@ -13,7 +13,13 @@ const postRegister = async (req,res) => {
     const password = req.body.password;
     const email = req.body.email;
 
-    db.query(`SELECT email FROM users WHERE username = '${username}' or email = '${email}'`, async (err, result) => {
+    if(username === "" || email === "" || password === "")
+        {
+            alert("Please enter all the values");
+        }
+
+    else
+    {   db.query(`SELECT email FROM users WHERE username = '${username}' or email = '${email}'`, async (err, result) => {
         if (err){
             console.log(error);
         }
@@ -34,10 +40,11 @@ const postRegister = async (req,res) => {
             })
         }
         });
+    }
 }
 
 const getLogin = (req,res) => {
-    sessionStorage.clear();
+    //sessionStorage.clear();
     res.sendFile("login.html",{root:"./views/templates/AdminLTE-master/pages/examples"});
 }
 
