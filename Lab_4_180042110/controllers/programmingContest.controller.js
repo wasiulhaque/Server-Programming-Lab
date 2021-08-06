@@ -12,7 +12,7 @@ const postPC = (req, res) => {
   let registrationFee = 2500;
 
   const total = registrationFee;
-  const paid = 2500;
+  const paid = 0;
   const selected = false;
 
   let error = "";
@@ -43,6 +43,8 @@ const postPC = (req, res) => {
             tshirtMember1,
             tshirtMember2,
             paid,
+            total,
+            selected,
           });
       team
         .save()
@@ -148,6 +150,89 @@ const selectPC = (req, res) => {
     });
 };
 
+const editPC = (req, res) => {
+  const id = req.params.id;
+  let teamInfo;
+
+  ProgrammingContest.findOne({ _id: id })
+    .then((team) => {
+      teamInfo = team;
+      // console.log(teamInfo);
+      res.render("programming-contest/editTeam.ejs", {
+        error: req.flash("error"),
+        teamInfo: team,
+      });
+    })
+    .catch(() => {
+      error = "Failed to update data!";
+      res.render("programming-contest/list.ejs", {
+        error: req.flash("error", error),
+      });
+    });
+};
+
+const postEditPC = (req, res) => {
+  const {
+    teamName,
+    institution,
+    coach,
+    contactCoach,
+    emailCoach,
+    tshirtCoach,
+    leader,
+    contactLeader,
+    emailLeader,
+    tshirtLeader,
+    member1,
+    contactMember1,
+    emailMember1,
+    tshirtMember1,
+    member2,
+    contactMember2,
+    emailMember2,
+    tshirtMember2,
+  } = req.body;
+  //console.log("here");
+
+  ProgrammingContest.updateOne(
+    {
+      _id: req.params.id,
+    },
+    {
+      $set: {
+        teamName,
+        institution,
+        coach,
+        contactCoach,
+        emailCoach,
+        tshirtCoach,
+        leader,
+        contactLeader,
+        emailLeader,
+        tshirtLeader,
+        member1,
+        contactMember1,
+        emailMember1,
+        tshirtMember1,
+        member2,
+        contactMember2,
+        emailMember2,
+        tshirtMember2,
+      },
+    }
+  )
+    .then(() => {
+      let error = "Data has been updated!";
+      req.flash("error", error);
+      res.redirect("/ProgrammingContest/list");
+    })
+    .catch((err) => {
+      let error = "Data could not be updated!";
+      req.flash("error", error);
+      res.redirect("/ProgrammingContest/list");
+    });
+};
+
 module.exports = {
   getPC,
   postPC,
@@ -155,4 +240,6 @@ module.exports = {
   deletePC,
   paymentDonePC,
   selectPC,
+  editPC,
+  postEditPC
 };

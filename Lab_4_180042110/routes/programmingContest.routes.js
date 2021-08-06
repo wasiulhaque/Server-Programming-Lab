@@ -13,6 +13,8 @@ const {
   deletePC,
   paymentDonePC,
   selectPC,
+  editPC,
+  postEditPC
 } = require("../controllers/programmingContest.controller");
 
 router.get("/register", ensureAuthenticated, addUserData, getPC);
@@ -22,5 +24,7 @@ router.get("/list", ensureAuthenticated, addUserData, getPCList);
 router.get("/delete/:id", ensureAuthenticated, addUserData, deletePC);
 router.get("/paymentDone/:id", ensureAuthenticated, addUserData, paymentDonePC);
 router.get("/select/:id", ensureAuthenticated, addUserData, selectPC);
+router.get("/edit/:id", ensureAuthenticated, addUserData, editPC);
+router.post("/edit/:id", ensureAuthenticated, addUserData, postEditPC);
 
 module.exports = router;
