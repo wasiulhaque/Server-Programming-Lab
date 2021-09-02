@@ -1,18 +1,32 @@
 const MathOlympiad = require("../models/MathOlympiad.model");
+const nodemailer = require("nodemailer");
+const randomstring = require("randomstring");
+ 
+const senderMail = process.env.UserEmail;
+const password = process.env.UserPass;
+ 
+// Hashing
+const participantHash = randomstring.generate({
+  length: 32,
+  charset: "alphanumeric",
+});
+console.log(participantHash);
 
+const transporter = nodemailer.createTransport({
+  service: "hotmail",
+  auth: {
+    user: senderMail,
+    pass: password,
+  },
+});
+ 
 const getMO = (req, res) => {
   res.render("math-olympiad/register.ejs", { error: req.flash("error") });
 };
-
+ 
 const postMO = (req, res) => {
   const { name, category, contact, email, institution, tshirt } = req.body;
-  console.log(name);
-  console.log(category);
-  console.log(contact);
-  console.log(email);
-  console.log(institution);
-  console.log(tshirt);
-
+ 
   let registrationFee = 0;
   if (category == "School") {
     registrationFee = 250;
@@ -21,13 +35,13 @@ const postMO = (req, res) => {
   } else {
     registrationFee = 500;
   }
-
+ 
   const total = registrationFee;
   const paid = 0;
   const selected = false;
-
+ 
   let error = "";
-
+ 
   MathOlympiad.findOne({ name: name, contact: contact }).then((participant) => {
     if (participant) {
       error = "Participant with this name and contact number already exists!";
@@ -44,11 +58,32 @@ const postMO = (req, res) => {
         total,
         selected,
         tshirt,
+        participantHash,
       });
       participant
         .save()
         .then(() => {
           error = "Participant has been registered successfully!";
+ 
+          const to = email;
+          const subject = "Team registered successfully in Math Olympiad.";
+          const body = "Your team registration completed. Your Unique ID is " + participantHash + ".";
+ 
+          const options = {
+            from: senderMail,
+            to: to,
+            subject: subject,
+            text: body,
+          };
+ 
+          transporter.sendMail(options, function (err, info) {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            console.log("Sent: " + info.response);
+          });
+ 
           req.flash("error", error);
           res.redirect("/MathOlympiad/register");
         })
@@ -60,7 +95,7 @@ const postMO = (req, res) => {
     }
   });
 };
-
+ 
 const getMOList = (req, res) => {
   let all_participant = [];
   let error = "";
@@ -80,10 +115,10 @@ const getMOList = (req, res) => {
       });
     });
 };
-
+ 
 const deleteMO = (req, res) => {
   let error = "";
-
+ 
   MathOlympiad.deleteOne({ _id: req.params.id })
     .then(() => {
       let error = "Data has been deleted successfully!";
@@ -96,10 +131,10 @@ const deleteMO = (req, res) => {
       res.redirect("/MathOlympiad/list");
     });
 };
-
+ 
 const paymentDoneMO = (req, res) => {
   const id = req.params.id;
-
+ 
   MathOlympiad.findOne({ _id: id })
     .then((participant) => {
       participant.paid = participant.total;
@@ -122,10 +157,10 @@ const paymentDoneMO = (req, res) => {
       res.redirect("/MathOlympiad/list");
     });
 };
-
+ 
 const selectMO = (req, res) => {
   const id = req.params.id;
-
+ 
   MathOlympiad.findOne({ _id: id })
     .then((participant) => {
       participant.selected = true;
@@ -148,7 +183,7 @@ const selectMO = (req, res) => {
       res.redirect("/MathOlympiad/list");
     });
 };
-
+ 
 module.exports = {
   getMO,
   postMO,

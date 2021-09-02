@@ -85,6 +85,10 @@ const PCSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  teamHash: {
+    type: String,
+    required: false,
+  },
 });
 
 const ProgrammingContest = mongoose.model("ProgrammingContest", PCSchema);

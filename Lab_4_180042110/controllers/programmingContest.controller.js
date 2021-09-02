@@ -1,4 +1,32 @@
 const ProgrammingContest = require("../models/ProgrammingContest.model");
+const nodemailer = require("nodemailer");
+const randomstring = require("randomstring");
+ 
+const senderMail = process.env.UserEmail;
+const password = process.env.UserPass;
+ 
+// Hashing
+const teamHash = randomstring.generate({
+  length: 32,
+  charset: "alphanumeric",
+});
+
+const transporter = nodemailer.createTransport({
+  service: "hotmail",
+  auth: {
+    user: senderMail,
+    pass: password,
+  },
+});
+ 
+const mailTemplate = (to, subject, body) => {};
+ 
+const getCP = (req, res) => {
+  res.render("programming-contest/register.ejs", {
+    error: req.flash("error"),
+  });
+};
+
 
 const getPC = (req, res) => {
   //console.log("Here");
@@ -45,11 +73,43 @@ const postPC = (req, res) => {
             paid,
             total,
             selected,
+            teamHash,
           });
       team
         .save()
         .then(() => {
           error = "Team has been registered successfully!";
+
+          const toMailList = [
+            emailCoach,
+            emailLeader,
+            emailMember1,
+            emailMember2,
+          ];
+ 
+          var to;
+          const subject = "Team registered successfully in Programming Contest";
+          const body = "Your team registration completed. Your Unique ID is " + teamHash + ".";
+ 
+          for (let i = 0; i < toMailList.length; i++) {
+            to = toMailList[i];
+            const options = {
+              from: senderMail,
+              to: to,
+              subject: subject,
+              text: body,
+            };
+ 
+            transporter.sendMail(options, function (err, info) {
+              if (err) {
+                console.log(err);
+                return;
+              }
+              console.log("Sent: " + info.response);
+            });
+          }
+
+
           req.flash("error", error);
           res.redirect("/ProgrammingContest/register");
         })

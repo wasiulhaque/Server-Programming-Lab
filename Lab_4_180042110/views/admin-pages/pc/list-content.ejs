@@ -41,7 +41,7 @@
                         <th class="table-bordered"  colspan="11">Status</th>
                     </tr>
                     <tr class="table-primary">
-                        <th scope="col">Team Name</th>
+                        <th scope="col">Team Hash</th>
                         <th scope="col">Coach</th>
     
                         <th scope="col">Name</th>
@@ -68,7 +68,7 @@
                     <% if(team.length>0){
                     team.forEach(team=>{%>
                     <tr>
-                        <td><%= team.teamName %></td>
+                        <td><%= team.teamHash %></td>
                         <td><%= team.coach %></td>
 
                         <td><%= team.leader %></td>
