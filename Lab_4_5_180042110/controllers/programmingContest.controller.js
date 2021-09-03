@@ -88,13 +88,21 @@ const postPC = (req, res) => {
             emailMember1,
             emailMember2,
           ];
+
+          const userList = [
+            coach,
+            leader,
+            member1,
+            member2
+          ];
  
           var to;
           const subject = "Team registered successfully in Programming Contest";
-          const body = "Your team registration completed. Your Unique ID is " + teamHash + ".";
+          var body;
  
           for (let i = 0; i < mailingList.length; i++) {
             to = mailingList[i];
+            body = "Hello " + userList[i] + ", " + "Your team registration has been completed for Programming Contest Event. Your Team's Unique ID is " + teamHash + ".";
             const options = {
               from: senderMail,
               to: to,

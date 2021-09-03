@@ -68,7 +68,7 @@ const postMO = (req, res) => {
  
           const to = email;
           const subject = "Team registered successfully in Math Olympiad.";
-          const body = "Your team registration completed. Your Unique ID is " + participantHash + ".";
+          const body = "Hello " + name + ", " + "Your team registration has been completed for Math Olympiad Event. Your Unique ID is " + participantHash + ".";
  
           const options = {
             from: senderMail,
