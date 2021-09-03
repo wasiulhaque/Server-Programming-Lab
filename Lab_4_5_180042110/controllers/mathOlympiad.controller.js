@@ -10,8 +10,9 @@ const participantHash = randomstring.generate({
   length: 32,
   charset: "alphanumeric",
 });
-console.log(participantHash);
+//console.log(participantHash);
 
+// Mail transporter
 const transporter = nodemailer.createTransport({
   service: "hotmail",
   auth: {
@@ -19,7 +20,7 @@ const transporter = nodemailer.createTransport({
     pass: password,
   },
 });
- 
+
 const getMO = (req, res) => {
   res.render("math-olympiad/register.ejs", { error: req.flash("error") });
 };

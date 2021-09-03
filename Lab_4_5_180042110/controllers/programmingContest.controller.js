@@ -11,6 +11,7 @@ const teamHash = randomstring.generate({
   charset: "alphanumeric",
 });
 
+// Mail transporter
 const transporter = nodemailer.createTransport({
   service: "hotmail",
   auth: {
@@ -18,7 +19,8 @@ const transporter = nodemailer.createTransport({
     pass: password,
   },
 });
- 
+
+//Mail template
 const mailTemplate = (to, subject, body) => {};
  
 const getCP = (req, res) => {
@@ -80,7 +82,7 @@ const postPC = (req, res) => {
         .then(() => {
           error = "Team has been registered successfully!";
 
-          const toMailList = [
+          const mailingList = [
             emailCoach,
             emailLeader,
             emailMember1,
@@ -91,8 +93,8 @@ const postPC = (req, res) => {
           const subject = "Team registered successfully in Programming Contest";
           const body = "Your team registration completed. Your Unique ID is " + teamHash + ".";
  
-          for (let i = 0; i < toMailList.length; i++) {
-            to = toMailList[i];
+          for (let i = 0; i < mailingList.length; i++) {
+            to = mailingList[i];
             const options = {
               from: senderMail,
               to: to,
